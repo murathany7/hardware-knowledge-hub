@@ -4,6 +4,16 @@ A project notebook for your first hardware build. Keep track of what you bought,
 
 **Start with the Bike Logger example.** Explore the bike layout, follow the wiring, read the build notes, and rotate the printed parts in 3D.
 
+## Install from PyPI
+
+```sh
+pip install hardware-knowledge-hub
+hardware-knowledge-hub init my-first-build
+cd my-first-build
+```
+
+Then run the editor from that folder.
+
 ## Run the editor
 
 With Python 3 installed, run this from the project folder.
