@@ -1,0 +1,1301 @@
+{
+ "_comment": "Dimensions of the tray in hardware/cad/enclosure.py. Edit here or in the editor (python3 hardware/knowledge/kb.py serve), then rebuild the 3D files.",
+ "parameters": [
+  {
+   "key": "W",
+   "label": "Box clear width",
+   "value": 112.5,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Inside width of the box (left to right). The tray is this wide."
+  },
+  {
+   "key": "L",
+   "label": "Box clear length",
+   "value": 173.5,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Inside length of the box (front to back). The tray is this long."
+  },
+  {
+   "key": "FT",
+   "label": "Floor thickness",
+   "value": 3,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Thickness of the flat base of the tray and of every pocket floor."
+  },
+  {
+   "key": "RX",
+   "label": "Side rim width",
+   "value": 10,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Width of the frame along the long sides. The middle is open to the box floor."
+  },
+  {
+   "key": "RY",
+   "label": "End rim width",
+   "value": 10,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Width of the frame at the short ends."
+  },
+  {
+   "key": "WR",
+   "label": "Window corner radius",
+   "value": 4,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Rounding of the corners of the open middle."
+  },
+  {
+   "key": "OR",
+   "label": "Outer corner radius",
+   "value": 3,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Rounding of the tray's four outer corners."
+  },
+  {
+   "key": "LIP_W",
+   "label": "Edge lip width",
+   "value": 2,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Width of the raised lip running round the outside edge of the frame. Stiffens the tray without making it bigger; 0 turns it off."
+  },
+  {
+   "key": "LIP_H",
+   "label": "Edge lip height",
+   "value": 4,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "How far the edge lip stands up above the frame's top face."
+  },
+  {
+   "key": "FIT",
+   "label": "Fit clearance",
+   "value": 0.4,
+   "unit": "mm per side",
+   "group": "Tray and box",
+   "help": "Gap left around every part that sits in a pocket. Raise it if parts are too tight after printing."
+  },
+  {
+   "key": "WALL",
+   "label": "Pocket wall thickness",
+   "value": 1.6,
+   "unit": "mm",
+   "group": "Tray and box",
+   "help": "Thickness of the walls around the Pi, IMU and GPS pockets."
+  },
+  {
+   "key": "PI_X",
+   "label": "Pi case width",
+   "value": 61,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "Pi 5 in its case, measured across the short side."
+  },
+  {
+   "key": "PI_Y",
+   "label": "Pi case length",
+   "value": 90,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "Pi 5 in its case, measured along the long side (USB end to the other end)."
+  },
+  {
+   "key": "PI_H",
+   "label": "Pi case height",
+   "value": 31,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "Height of the Pi in its case including the fan. Estimate: measure it. Only used for the fit check."
+  },
+  {
+   "key": "PI_LIFT",
+   "label": "Pi lift (pedestal height)",
+   "value": 20,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "How high the Pi pocket is raised above the tray floor, so its ports are not blocked by neighbouring walls."
+  },
+  {
+   "key": "WALL_H_PI",
+   "label": "Pi pocket wall height",
+   "value": 9,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "Height of the walls holding the Pi, measured from the top of the pedestal."
+  },
+  {
+   "key": "PI_INSET",
+   "label": "Pi USB-end opening inset",
+   "value": 3,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "How far the opening at the USB end stops short of each corner."
+  },
+  {
+   "key": "PI_SIDE_INSET",
+   "label": "Pi side opening inset",
+   "value": 10,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "How far the opening on the +X side (USB-C / HDMI) stops short of each end."
+  },
+  {
+   "key": "OVERLAP",
+   "label": "Pi pocket overlap into rim",
+   "value": 1,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "How far the Pi pocket reaches over the left rim."
+  },
+  {
+   "key": "CZ",
+   "label": "Cable zone length",
+   "value": 50,
+   "unit": "mm",
+   "group": "Raspberry Pi",
+   "help": "Space between the Pi's USB end and the end of the tray (where the Pi cable ends sit)."
+  },
+  {
+   "key": "PI_CORNER",
+   "label": "Pi in the corner (1) / by cable zone (0)",
+   "value": 1,
+   "unit": "0 or 1",
+   "group": "Raspberry Pi",
+   "help": "1 pushes the Pi pocket all the way into the -X/-Y corner of the tray (clear of the post cut-out on the notched tray), freeing the +Y end. 0 uses the cable zone length instead."
+  },
+  {
+   "key": "US_TRAY",
+   "label": "Ultrasonic shell on the tray (1) / off (0)",
+   "value": 1,
+   "unit": "0 or 1",
+   "group": "Ultrasonic on tray",
+   "help": "Pocket for one ultrasonic shell, mounted upside down with the probe cable hole facing the box lid. Standard tray only (the notched tray has no room)."
+  },
+  {
+   "key": "US_T_WALL",
+   "label": "Pocket wall",
+   "value": 1.6,
+   "unit": "mm",
+   "group": "Ultrasonic on tray",
+   "help": "Wall thickness of the shell pocket."
+  },
+  {
+   "key": "US_T_H",
+   "label": "Pocket wall height",
+   "value": 10,
+   "unit": "mm",
+   "group": "Ultrasonic on tray",
+   "help": "How high the pocket walls go up round the shell. The shell is about 30 mm tall, so the top part sticks out."
+  },
+  {
+   "key": "BBL",
+   "label": "Breadboard length",
+   "value": 87,
+   "unit": "mm",
+   "group": "Breadboard",
+   "help": "Length of the breadboard (runs along the tray)."
+  },
+  {
+   "key": "BBT",
+   "label": "Breadboard thickness",
+   "value": 10,
+   "unit": "mm",
+   "group": "Breadboard",
+   "help": "Thickness of the breadboard, standing on its edge against the box wall."
+  },
+  {
+   "key": "BBH",
+   "label": "Breadboard height",
+   "value": 54,
+   "unit": "mm",
+   "group": "Breadboard",
+   "help": "Height of the breadboard standing on its edge."
+  },
+  {
+   "key": "BB_GAP",
+   "label": "Gap above the IMU pocket",
+   "value": 0.6,
+   "unit": "mm",
+   "group": "Breadboard",
+   "help": "Spacing between the IMU pocket and the breadboard holder."
+  },
+  {
+   "key": "EWT",
+   "label": "Holder end wall thickness",
+   "value": 2,
+   "unit": "mm",
+   "group": "Breadboard",
+   "help": "Thickness of the two small walls that hold the breadboard ends."
+  },
+  {
+   "key": "EWD",
+   "label": "Holder end wall depth",
+   "value": 12,
+   "unit": "mm",
+   "group": "Breadboard",
+   "help": "How far each end wall reaches out from the box wall."
+  },
+  {
+   "key": "EWH",
+   "label": "Holder end wall height",
+   "value": 20,
+   "unit": "mm",
+   "group": "Breadboard",
+   "help": "Height of the end walls. This also sets the total tray height."
+  },
+  {
+   "key": "GPS_X",
+   "label": "GPS length",
+   "value": 50,
+   "unit": "mm",
+   "group": "GPS receiver",
+   "help": "GPS receiver length (the long side; the cable leaves one short end)."
+  },
+  {
+   "key": "GPS_Y",
+   "label": "GPS width",
+   "value": 38,
+   "unit": "mm",
+   "group": "GPS receiver",
+   "help": "GPS receiver width."
+  },
+  {
+   "key": "GPS_H",
+   "label": "GPS height",
+   "value": 20,
+   "unit": "mm",
+   "group": "GPS receiver",
+   "help": "GPS receiver thickness. Only used for the fit check."
+  },
+  {
+   "key": "GWALL_H",
+   "label": "GPS pocket wall height",
+   "value": 12,
+   "unit": "mm",
+   "group": "GPS receiver",
+   "help": "Height of the walls around the GPS."
+  },
+  {
+   "key": "GCABLE_W",
+   "label": "GPS cable slot width",
+   "value": 12,
+   "unit": "mm",
+   "group": "GPS receiver",
+   "help": "Width of the notch where the USB cable leaves the pocket."
+  },
+  {
+   "key": "NOTCH_X",
+   "label": "Corner post cut-out width",
+   "value": 21,
+   "unit": "mm",
+   "group": "GPS receiver",
+   "help": "Notched tray only: width of the cut-out for each box corner post. The GPS stays clear of it."
+  },
+  {
+   "key": "NOTCH_Y",
+   "label": "Corner post cut-out length",
+   "value": 11,
+   "unit": "mm",
+   "group": "GPS receiver",
+   "help": "Notched tray only: length of the cut-out for each box corner post."
+  },
+  {
+   "key": "IMU_X",
+   "label": "IMU board long side",
+   "value": 25.6,
+   "unit": "mm",
+   "group": "IMU sensor",
+   "help": "BNO085 board, long side (the one with the plugs)."
+  },
+  {
+   "key": "IMU_Y",
+   "label": "IMU board short side",
+   "value": 22.7,
+   "unit": "mm",
+   "group": "IMU sensor",
+   "help": "BNO085 board, short side."
+  },
+  {
+   "key": "IMX",
+   "label": "IMU position across the tray",
+   "value": 33,
+   "unit": "mm from centre",
+   "group": "IMU sensor",
+   "help": "Where the IMU sits left to right. Positive = towards the breadboard wall."
+  },
+  {
+   "key": "WALL_H_IMU",
+   "label": "IMU pocket wall height",
+   "value": 6,
+   "unit": "mm",
+   "group": "IMU sensor",
+   "help": "Height of the walls around the IMU."
+  },
+  {
+   "key": "OPENW",
+   "label": "IMU cable opening width",
+   "value": 10,
+   "unit": "mm",
+   "group": "IMU sensor",
+   "help": "Width of the cable openings on both plug ends."
+  },
+  {
+   "key": "LID_T",
+   "label": "IMU lid thickness",
+   "value": 4,
+   "unit": "mm",
+   "group": "IMU sensor",
+   "help": "Thickness of the snap lid."
+  },
+  {
+   "key": "LID_CLR",
+   "label": "IMU lid clearance",
+   "value": 0.2,
+   "unit": "mm",
+   "group": "IMU sensor",
+   "help": "Gap between the lid and the pocket wall top."
+  },
+  {
+   "key": "EAR_R",
+   "label": "Hinge ear radius",
+   "value": 2.2,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "Radius of the rounded hinge ears on the pocket."
+  },
+  {
+   "key": "EAR_W",
+   "label": "Hinge ear width",
+   "value": 3.5,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "Thickness of each hinge ear."
+  },
+  {
+   "key": "EAR_X",
+   "label": "Hinge ear position",
+   "value": 8,
+   "unit": "mm from centre",
+   "group": "IMU lid hinge (advanced)",
+   "help": "Distance of each ear from the pocket centre."
+  },
+  {
+   "key": "PIN_HOLE",
+   "label": "Hinge pin hole",
+   "value": 2,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "Hole for the 1.75 mm filament hinge pin (a little bigger so it turns)."
+  },
+  {
+   "key": "BARREL_HW",
+   "label": "Lid hinge barrel half-length",
+   "value": 6,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "Half the length of the lid's hinge barrel."
+  },
+  {
+   "key": "ARM_T",
+   "label": "Snap arm thickness",
+   "value": 1.2,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "Thickness of the flexible arm that clicks the lid shut."
+  },
+  {
+   "key": "ARM_HW",
+   "label": "Snap arm half-width",
+   "value": 4,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "Half the width of the snap arm and catch."
+  },
+  {
+   "key": "BUMP",
+   "label": "Snap catch bump",
+   "value": 0.8,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "How far the catch sticks out."
+  },
+  {
+   "key": "BARB",
+   "label": "Snap barb depth",
+   "value": 1,
+   "unit": "mm",
+   "group": "IMU lid hinge (advanced)",
+   "help": "How far the lid barb reaches."
+  },
+  {
+   "key": "CH_ON",
+   "label": "Cable channel on (1) / off (0)",
+   "value": 0,
+   "unit": "0 or 1",
+   "group": "Cable channel",
+   "help": "Whether the tray has the covered cable channel and its snap-on lid. Off for now; set to 1 to bring it back."
+  },
+  {
+   "key": "TX",
+   "label": "Trunk position across the tray",
+   "value": 34,
+   "unit": "mm from centre",
+   "group": "Cable trunk",
+   "help": "Where the cable trunk runs, left to right."
+  },
+  {
+   "key": "CH_W",
+   "label": "Channel inner width",
+   "value": 12.8,
+   "unit": "mm",
+   "group": "Cable trunk",
+   "help": "Width of the cable channel inside (a bundle of USB, JST and Dupont cables is about 10 mm)."
+  },
+  {
+   "key": "CH_H",
+   "label": "Channel inner height",
+   "value": 15,
+   "unit": "mm",
+   "group": "Cable trunk",
+   "help": "Height of the channel walls above the channel floor. The lid sits on top of the walls."
+  },
+  {
+   "key": "CH_WALL",
+   "label": "Channel wall thickness",
+   "value": 2.4,
+   "unit": "mm",
+   "group": "Cable trunk",
+   "help": "Thickness of the two side walls (the snap dimples are cut into them)."
+  },
+  {
+   "key": "CH_FLOOR",
+   "label": "Channel floor thickness",
+   "value": 2,
+   "unit": "mm",
+   "group": "Cable trunk",
+   "help": "Solid floor under the cables, on top of the tray floor."
+  },
+  {
+   "key": "CH_LID_T",
+   "label": "Channel lid thickness",
+   "value": 2,
+   "unit": "mm",
+   "group": "Cable trunk",
+   "help": "Thickness of the lid plate that rests on the channel walls."
+  },
+  {
+   "key": "CH_LID_OVER",
+   "label": "Channel lid pull tab",
+   "value": 4,
+   "unit": "mm",
+   "group": "Cable trunk",
+   "help": "How far the lid sticks out past the channel's open end, to get a fingernail under it."
+  },
+  {
+   "key": "CH_TAB_H",
+   "label": "Lid snap tab height",
+   "value": 6,
+   "unit": "mm",
+   "group": "Cable trunk",
+   "help": "How far the lid's snap tabs reach down inside the channel."
+  },
+  {
+   "key": "US_BX",
+   "label": "Board length",
+   "value": 41,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Control board length. ESTIMATE from the photo: measure with calipers."
+  },
+  {
+   "key": "US_BY",
+   "label": "Board width",
+   "value": 29,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Control board width. ESTIMATE from the photo."
+  },
+  {
+   "key": "US_BT",
+   "label": "Board thickness",
+   "value": 1.2,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "PCB thickness only, without parts."
+  },
+  {
+   "key": "US_HDX",
+   "label": "Mounting hole spacing, long side",
+   "value": 35.5,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Distance between the corner holes along the board length. ESTIMATE."
+  },
+  {
+   "key": "US_HDY",
+   "label": "Mounting hole spacing, short side",
+   "value": 23.8,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Distance between the corner holes across the board. ESTIMATE."
+  },
+  {
+   "key": "US_HD",
+   "label": "Mounting hole diameter",
+   "value": 2.5,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Corner holes of the board. ESTIMATE (looks like M2.5)."
+  },
+  {
+   "key": "US_BACK_H",
+   "label": "Probe plug height under the board",
+   "value": 8,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Height of the probe plug on the back of the board. It sinks into the dent in the floor, so the board itself only sits on short posts."
+  },
+  {
+   "key": "US_TOP_H",
+   "label": "Parts on top of the board",
+   "value": 9,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Room above the board for the chip, capacitors and plugs."
+  },
+  {
+   "key": "US_PLUG_OVER",
+   "label": "Wire corridor at the -Y end",
+   "value": 0,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Space between the end of the board and the short wall at the cable end: the Dupont wires cross it to reach the notch in the middle of that wall, and the probe cable hole sits here."
+  },
+  {
+   "key": "US_DUP_LEN",
+   "label": "Dupont plug room beside the board",
+   "value": 0,
+   "unit": "mm",
+   "group": "Ultrasonic board (AJ-SR04M)",
+   "help": "Space between the board's header edge and the long wall: the Dupont plugs stick out about 12 mm, then the wires bend towards the corridor."
+  },
+  {
+   "key": "US_COUNT",
+   "label": "Boxes on the plate",
+   "value": 4,
+   "unit": "pieces",
+   "group": "Ultrasonic box",
+   "help": "How many boxes (each with its own lid) are placed side by side on the print plate."
+  },
+  {
+   "key": "US_FL",
+   "label": "Floor thickness",
+   "value": 9,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Floor thickness. The dent for the probe plug is cut into it, and the zip-tie tunnels run under it."
+  },
+  {
+   "key": "US_WALL",
+   "label": "Wall around the gasket groove",
+   "value": 2.4,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Wall on each side of the groove for the foam cord."
+  },
+  {
+   "key": "US_GW",
+   "label": "Gasket groove width",
+   "value": 0,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Groove in the rim for the 3 mm silicone foam cord."
+  },
+  {
+   "key": "US_GD",
+   "label": "Gasket groove depth",
+   "value": 2,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Depth of the groove (the cord is squeezed by about a third)."
+  },
+  {
+   "key": "US_LID_T",
+   "label": "Lid thickness",
+   "value": 3.5,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Thickness of the lid plate."
+  },
+  {
+   "key": "US_PROBE_D",
+   "label": "Probe cable hole (floor)",
+   "value": 14,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Round hole straight down through the exact centre of the floor for the probe cable. The cable leaves the plug at the end of the board and runs down into the dent to this hole. ESTIMATE: the cable looks about 3.5-4 mm. Fill with silicone."
+  },
+  {
+   "key": "US_STANDOFF",
+   "label": "Board standoff",
+   "value": 3,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "How high the board sits on its posts above the floor: just enough for the solder points. The plug sits lower, in the dent."
+  },
+  {
+   "key": "US_WIRE_D",
+   "label": "Wire notch width",
+   "value": 12,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Open notch from the top in the +X wall, next to the header: the four soldered wires lie in it and the lid closes it."
+  },
+  {
+   "key": "US_TIE_W",
+   "label": "Zip-tie tunnel width",
+   "value": 5,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Width of the two tunnels under the floor for 2.5 mm zip ties."
+  },
+  {
+   "key": "US_TIE_T",
+   "label": "Zip-tie tunnel height",
+   "value": 2.8,
+   "unit": "mm",
+   "group": "Ultrasonic box",
+   "help": "Height of the tunnels."
+  },
+  {
+   "key": "WS_TUBE_W",
+   "label": "Stay width (sideways)",
+   "value": 16,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Size of the left (non-drive side) seatstay sideways, from its FLAT face (towards the wheel) to the back of its rounded side, where the bracket sits: a few cm above the dropout, above the roller brake (ESTIMATE: measure with calipers). Round tube: the diameter."
+  },
+  {
+   "key": "WS_TUBE_H",
+   "label": "Stay depth",
+   "value": 23,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Size of the seatstay front to back at the same spot: the width of its FLAT face (MEASURED by the user: 23 mm). Round tube: the diameter."
+  },
+  {
+   "key": "WS_TUBE_R",
+   "label": "Stay flat-face corner radius",
+   "value": 3,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "The stay is D-shaped: flat towards the wheel, rounded outside. This is the radius of the two corners at the ends of the flat face (ESTIMATE 3 mm: trace the section or press it into modelling clay). The round side is a half-ellipse from those corners to the back, set by the width and depth. Round tube: half the depth minus 0.2."
+  },
+  {
+   "key": "WS_PAD",
+   "label": "Rubber pad thickness",
+   "value": 1,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Thickness of the strip of inner tube between bracket and tube. The bore is the tube plus this on every side."
+  },
+  {
+   "key": "WS_SPOKE_GAP",
+   "label": "Stay to magnet",
+   "value": 35,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Distance from the seatstay's INNER face (the side facing the wheel) to the NEAR FACE of the spoke magnet, measured sideways at the bracket height (ESTIMATE: put the magnet on a left-side spoke first, then measure with a ruler). The bracket needs at least about 22 mm."
+  },
+  {
+   "key": "WS_CHIP_GAP",
+   "label": "Chip to magnet gap",
+   "value": 8,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Wanted distance from the Hall chip to the magnet, through the plastic window. The A3144 reads reliably up to about 10 mm."
+  },
+  {
+   "key": "WS_BOARD_Y",
+   "label": "Hall board width",
+   "value": 18.5,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "KY-003 board, the long side (ESTIMATE)."
+  },
+  {
+   "key": "WS_BOARD_Z",
+   "label": "Hall board height",
+   "value": 15,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "KY-003 board, the short side (ESTIMATE)."
+  },
+  {
+   "key": "WS_BOARD_T",
+   "label": "Hall board thickness",
+   "value": 1.6,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "PCB thickness."
+  },
+  {
+   "key": "WS_COMP_H",
+   "label": "Hall chip height above board",
+   "value": 6,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Height of the A3144 and the other parts above the board on the component side (ESTIMATE)."
+  },
+  {
+   "key": "WS_CABLE_W",
+   "label": "Cable slot width",
+   "value": 10,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Rectangular hole in the middle of the sensor pocket's floor (the closed end), for the wires that leave the board's header there. Runs the full pocket depth; the board rests on the floor beside it. 10 mm takes three soldered wires or a 3-pin Dupont plug (about 7.5 x 2.5 mm). Fill with silicone after routing."
+  },
+  {
+   "key": "WS_BODY_H",
+   "label": "Bracket height",
+   "value": 24,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Height of the clamp along the tube. Two zip-tie tunnels sit in it."
+  },
+  {
+   "key": "WS_WALL",
+   "label": "Wall and window thickness",
+   "value": 1.6,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Minimum wall. The window in front of the chip is this thick."
+  },
+  {
+   "key": "WS_BACK",
+   "label": "Material behind the tube",
+   "value": 3.2,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Thickness of the clamp behind the tube, including the zip-tie groove in it."
+  },
+  {
+   "key": "WS_SIDE",
+   "label": "Material beside the tube",
+   "value": 3.2,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Wall on each side of the bore, including the zip-tie groove in it."
+  },
+  {
+   "key": "WS_TIE_W",
+   "label": "Zip-tie groove height",
+   "value": 3.2,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Height of the two grooves for 2.5 mm zip ties (measured along the tube)."
+  },
+  {
+   "key": "WS_TIE_T",
+   "label": "Zip-tie groove depth",
+   "value": 1.5,
+   "unit": "mm",
+   "group": "Wheel sensor",
+   "help": "Depth of the grooves in the outside of the clamp."
+  },
+  {
+   "key": "C_CAM_W",
+   "label": "Board width (X)",
+   "value": 25,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_CAM_H",
+   "label": "Board height (Z)",
+   "value": 23.862,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_CAM_T",
+   "label": "PCB thickness",
+   "value": 1.12,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_HOLE_DX",
+   "label": "Mounting hole spacing X",
+   "value": 21,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Holes 2.0 mm in from each side edge. Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_HOLE_DZ",
+   "label": "Mounting hole spacing Z",
+   "value": 12.5,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_HOLE_Z0",
+   "label": "Lower holes above the bottom edge",
+   "value": 2.0,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Centre of the lower pair of holes from the board's bottom edge (the edge away from the connector). Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_HOLE_D",
+   "label": "Mounting hole diameter",
+   "value": 2.2,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Pads around them are 4.75 mm. Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_PAD_D",
+   "label": "Mounting pad diameter",
+   "value": 4.75,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Copper pad around each hole: the post must not be wider. Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_LENS_X",
+   "label": "Lens centre from the board centre line",
+   "value": 0,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "The lens is centred across the board (12.5 mm from each side). Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_LENS_Z0",
+   "label": "Lens centre above the bottom edge",
+   "value": 14.4,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_LENS_W",
+   "label": "Lens block footprint (square)",
+   "value": 10.8,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_LENS_H",
+   "label": "Lens block height above the PCB",
+   "value": 4.07,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "The square part of the lens. Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_LENS_TOP",
+   "label": "Lens tip above the PCB",
+   "value": 8.3,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Front face of the PCB to the tip of the round lens barrel (Wide; the standard Module 3 is lower). Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_NOSE_D",
+   "label": "Lens barrel diameter",
+   "value": 6.95,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "The round barrel on top of the square block. Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_DEPTH_ALL",
+   "label": "Whole module depth",
+   "value": 12,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Lens tip to the back of the connector; what is behind the PCB follows from it (2.58 mm). Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_CONN_W",
+   "label": "Connector width",
+   "value": 19.61,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Ribbon connector on the back, at the top edge; the ribbon leaves through the top edge. Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_CONN_H",
+   "label": "Connector height",
+   "value": 5.71,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Official Raspberry Pi mechanical drawing (camera-module-3-wide-mechanical-drawing.pdf)."
+  },
+  {
+   "key": "C_RIB_W",
+   "label": "Ribbon width",
+   "value": 16.0,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "15-way 1 mm pitch flat cable at the camera end (Pi 5 cables are 22-way at the Pi end only)."
+  },
+  {
+   "key": "C_FOV_D",
+   "label": "Field of view, diagonal",
+   "value": 120,
+   "unit": "deg",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "Wide: 102 deg horizontal, 67 deg vertical, 120 deg diagonal (product brief). Used to check that the window opening does not cut the picture."
+  },
+  {
+   "key": "C_GLASS_D",
+   "label": "Front glass diameter",
+   "value": 4.0,
+   "unit": "mm",
+   "group": "Camera board (Module 3 Wide)",
+   "help": "ESTIMATE: clear glass at the tip of the barrel; only used for the field-of-view check."
+  },
+  {
+   "key": "C_CAV_GAP",
+   "label": "Board to cavity wall",
+   "value": 1.0,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Room around the board's sides and bottom edge."
+  },
+  {
+   "key": "C_RIB_ROOM",
+   "label": "Room under the board",
+   "value": 3.0,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Under the board's connector edge: the ribbon goes straight down into the floor slot, with room for the heat-shrink sleeve to start."
+  },
+  {
+   "key": "C_BACK_ROOM",
+   "label": "Room behind the connector",
+   "value": 2.0,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Minimum gap between the back of the connector and the lid."
+  },
+  {
+   "key": "C_LG",
+   "label": "Gap lens tip to window",
+   "value": 0.5,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "The barrel reaches into the front wall so the glass sits just behind the window: the wide lens then sees past the window edges."
+  },
+  {
+   "key": "C_BLOCK_GAP",
+   "label": "Gap lens block to front wall",
+   "value": 0.3,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "The board sits on posts; the lens block stops just short of the wall."
+  },
+  {
+   "key": "C_WALL",
+   "label": "Wall beside the gasket groove",
+   "value": 1.6,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Wall on each side of the gasket groove."
+  },
+  {
+   "key": "C_GROOVE_W",
+   "label": "Gasket groove width",
+   "value": 3.2,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_GROOVE_D",
+   "label": "Gasket groove depth",
+   "value": 2,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_CORD",
+   "label": "Foam cord diameter",
+   "value": 3,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "3 mm silicone foam cord."
+  },
+  {
+   "key": "C_CORNER",
+   "label": "Outer corner radius",
+   "value": 3,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_GROOVE_R",
+   "label": "Gasket groove outer corner radius",
+   "value": 6,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_POST_R",
+   "label": "PCB post radius",
+   "value": 2.2,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Posts under the four holes, smaller than the 4.75 mm pads."
+  },
+  {
+   "key": "C_WIN",
+   "label": "Window plate size (square)",
+   "value": 24,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Clear plastic cut from the lid of the spare box."
+  },
+  {
+   "key": "C_WIN_T",
+   "label": "Window plate thickness",
+   "value": 2,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_WIN_RECESS",
+   "label": "Window recess depth",
+   "value": 2.2,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Recess on the outside of the front wall."
+  },
+  {
+   "key": "C_INS_D",
+   "label": "M3 insert hole diameter",
+   "value": 4,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "For the two clamp screws (the lid has snap latches, no screws)."
+  },
+  {
+   "key": "C_INS_DEEP",
+   "label": "M3 insert hole depth",
+   "value": 6.5,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "For the two clamp screws (the lid has snap latches, no screws)."
+  },
+  {
+   "key": "C_CLR_D",
+   "label": "M3 clearance hole",
+   "value": 3.4,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "For the two clamp screws (the lid has snap latches, no screws)."
+  },
+  {
+   "key": "C_LID_T",
+   "label": "Lid thickness",
+   "value": 3.5,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_PEG_D",
+   "label": "Lid peg diameter",
+   "value": 3.4,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Four pegs on the lid press the camera board onto its posts."
+  },
+  {
+   "key": "C_PEG_GAP",
+   "label": "Peg to board gap",
+   "value": 0.3,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_LIP_H",
+   "label": "Lid lip depth",
+   "value": 2.0,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Lip on the lid that goes into the cavity and keeps the lid square."
+  },
+  {
+   "key": "C_LIP_T",
+   "label": "Lid lip wall",
+   "value": 1.2,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": ""
+  },
+  {
+   "key": "C_FL",
+   "label": "Rail width",
+   "value": 2.5,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "How far the side rail (and the lid's flange beside it) stands out of the side wall."
+  },
+  {
+   "key": "C_FT",
+   "label": "Rail thickness",
+   "value": 3.0,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Rail thickness front to back at its top; the lock bar's front arm hooks behind it."
+  },
+  {
+   "key": "C_TAPER",
+   "label": "Rail taper",
+   "value": 0.6,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "The rail is this much thicker at the bottom: the lock bar pulls the lid this far onto the cord as it slides home. Keep it under the cord squeeze."
+  },
+  {
+   "key": "C_BAR_T",
+   "label": "Lock bar wall",
+   "value": 2.4,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Wall thickness of the C-shaped lock bars."
+  },
+  {
+   "key": "C_HEAD",
+   "label": "Lock bar head",
+   "value": 4.0,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Solid top of each lock bar: rests on the rail when home, and is what you pull to open."
+  },
+  {
+   "key": "C_SL_GAP",
+   "label": "Lock bar clearance",
+   "value": 0.3,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Between the lock bar and the housing wall and round the rail's outer edge."
+  },
+  {
+   "key": "C_SL_PLAY",
+   "label": "Lock bar play",
+   "value": 0.1,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Gap between the bar and the rail's front face when the bar is home and the lid sits on the rim."
+  },
+  {
+   "key": "C_SLOT_W",
+   "label": "Ribbon slot width (X)",
+   "value": 20,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Slot straight down through the floor, under the connector: the 16 mm ribbon in its heat-shrink sleeve leaves towards the ground with no bend."
+  },
+  {
+   "key": "C_SLOT_T",
+   "label": "Ribbon slot thickness (Y)",
+   "value": 3,
+   "unit": "mm",
+   "group": "Camera housing",
+   "help": "Centred on the middle of the connector's height behind the PCB, where the ribbon leaves it; room for the sleeve."
+  },
+  {
+   "key": "C_RACK_D",
+   "label": "Rack tube diameter",
+   "value": 10,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": "ESTIMATE: the round tube at the back end of the rack, running sideways. Measure it with calipers where the camera goes."
+  },
+  {
+   "key": "C_RACK_PAD",
+   "label": "Rubber pad thickness",
+   "value": 1,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": "Strip of inner tube wrapped round the rack tube under the clamp."
+  },
+  {
+   "key": "C_TUBE_UP",
+   "label": "Tube centre above the block top",
+   "value": 3,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": "The tube sits in a 90 deg V in the block on top of the housing; this sets how deep. Keep it under (tube radius + pad) x 0.7 so the tube touches both sides of the V."
+  },
+  {
+   "key": "C_CAP_GAP",
+   "label": "Cap to block gap",
+   "value": 1.5,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": "Gap left between cap and block, so the screws squeeze the pad."
+  },
+  {
+   "key": "C_CAP_L",
+   "label": "Cap length along the tube",
+   "value": 20,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": ""
+  },
+  {
+   "key": "C_CAP_TOP",
+   "label": "Cap material over the tube",
+   "value": 3,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": ""
+  },
+  {
+   "key": "C_HEAD_D",
+   "label": "Screw head counterbore",
+   "value": 6.5,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": "Counterbore in the cap for the M3 heads."
+  },
+  {
+   "key": "C_UNDER_HEAD",
+   "label": "Cap under the screw heads",
+   "value": 4,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": "Cap thickness left under the counterbore; with the gap and insert this makes M3 x 10 screws."
+  },
+  {
+   "key": "C_SCREW_EDGE",
+   "label": "Tube to screw hole",
+   "value": 1,
+   "unit": "mm",
+   "group": "Camera rack clamp",
+   "help": "Minimum material between the tube groove and a screw or insert hole."
+  }
+ ]
+}

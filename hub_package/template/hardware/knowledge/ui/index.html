@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hardware knowledge</title>
+<script>
+  // Links here are relative (the public copy lives under /bike-logger/hardware/), so the address must end in "/".
+  if (!location.pathname.endsWith("/")) location.replace(location.pathname + "/" + location.search + location.hash);
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="blob one" aria-hidden="true"></div><div class="blob two" aria-hidden="true"></div>
+<header>
+  <nav id="sitenav" aria-label="murathanyildirim.com">
+    <a href="/">Murathan Yıldırım</a>
+    <a href="/#bike-logger">Bike Logger</a>
+    <a href="../">3D showcase</a>
+  </nav>
+  <h1><span class="site-only">Build notes</span><span class="local-only">Hardware knowledge</span></h1>
+  <button id="view-bike">Bike</button>
+  <button id="view-wiring">Wiring</button>
+  <button id="view-kb">Notes</button>
+  <button id="view-3d">3D parts</button>
+  <span id="status"></span>
+  <button id="save" class="primary" disabled>Save &amp; rebuild CLAUDE.md</button>
+</header>
+<main>
+  <nav id="nav" aria-label="Sections"></nav>
+  <section id="editor" aria-label="Editor"></section>
+  <aside id="seen" aria-label="What Claude sees">
+    <div class="tabs" id="tabs"></div>
+    <div class="meta" id="meta"></div>
+    <pre id="preview"></pre>
+  </aside>
+</main>
+<div id="viewer" hidden>
+  <nav id="parts" aria-label="Parts"></nav>
+  <div id="stage">
+    <canvas id="gl"></canvas>
+    <div id="info"></div>
+    <button id="studio" title="Opens the plate (3MF) or the STL in Bambu Studio's Prepare view">Open in Bambu Studio</button>
+    <div id="hint">Click a part: its dimensions open on the right. Drag: rotate &middot; Shift/right-drag: pan &middot; Wheel: zoom &middot; Double-click: reset. Reloads on its own when the file changes.</div>
+  </div>
+  <aside id="drawer" aria-label="Dimensions" hidden></aside>
+</div>
+<div id="bike" hidden>
+  <div id="bstage">
+    <svg id="bsvg" role="img" aria-label="Side view of the bike with the logger parts"></svg>
+    <div id="bhint">Click a part or a tube: it opens on the right, edit it there. Drag a part to move it on the drawing. Seen from the right (drive) side; dashed = on the left side.</div>
+  </div>
+  <aside id="bpanel" aria-label="Selected item"></aside>
+</div>
+<div id="wiring" hidden>
+  <div id="wstage">
+    <svg id="wsvg" role="img" aria-label="Wiring between the Raspberry Pi header, the breadboard and the sensors"></svg>
+    <div id="whint">Click a wire, a Pi pin or a breadboard hole: it opens on the right. Holes in one numbered column (a-e or f-j) are joined; so is each rail.</div>
+  </div>
+  <aside id="wpanel" aria-label="Selected wire"></aside>
+</div>
+<script src="app.js"></script>
+<script src="viewer.js"></script>
+<script src="bike.js"></script>
+<script src="wiring.js"></script>
+</body>
+</html>
