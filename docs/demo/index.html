@@ -39,7 +39,16 @@
   <div id="stage">
     <canvas id="gl"></canvas>
     <div id="info"></div>
-    <button id="studio" title="Opens the plate (3MF) or the STL in Bambu Studio's Prepare view">Open in Bambu Studio</button>
+    <div id="studio" hidden>
+      <select id="model-app" aria-label="3D application">
+        <option value="bambu">Bambu Studio</option>
+        <option value="orca">OrcaSlicer</option>
+        <option value="prusa">PrusaSlicer</option>
+        <option value="freecad">FreeCAD</option>
+      </select>
+      <button id="open-model" type="button">Open model</button>
+      <span id="open-result" role="status"></span>
+    </div>
     <div id="hint">Click a part: its dimensions open on the right. Drag: rotate &middot; Shift/right-drag: pan &middot; Wheel: zoom &middot; Double-click: reset. Reloads on its own when the file changes.</div>
   </div>
   <aside id="drawer" aria-label="Dimensions" hidden></aside>

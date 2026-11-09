@@ -385,6 +385,7 @@
     const now = list.find((p) => p.name === selected);
     parts = list;
     if (!cm && !selected && list.length) selected = (list.find((p) => p.name.startsWith("box_v2_body")) || list[0]).name;
+    $("studio").hidden = !now || !!cm;
     drawList();
     if (!cm && selected && (!prev || !now || prev.mtime !== now.mtime || !mesh)) load(selected);
   }
@@ -401,11 +402,23 @@
     drawList();
     if (compId) select(compId, false);
   };
-  $("studio").onclick = async () => {
-    const r = await fetch("api/open-in-studio", { method: "POST", body: JSON.stringify({ name: selected }) });
-    const j = await r.json();
-    $("studio").textContent = r.ok ? "Opened " + j.opened : j.error;
-    setTimeout(() => { $("studio").textContent = "Open in Bambu Studio"; }, 3000);
+  $("open-model").onclick = async () => {
+    const button = $("open-model");
+    const result = $("open-result");
+    button.disabled = true;
+    result.textContent = "";
+    try {
+      const response = await fetch("api/open-model", {
+        method: "POST",
+        body: JSON.stringify({ name: selected, app: $("model-app").value }),
+      });
+      const data = await response.json();
+      result.textContent = response.ok ? "Opened " + data.opened : data.error;
+    } catch {
+      result.textContent = "Could not reach the local editor.";
+    } finally {
+      button.disabled = false;
+    }
   };
   if (!gl) $("view-3d").disabled = true;
 

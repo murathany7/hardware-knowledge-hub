@@ -170,15 +170,31 @@ def rebuild_in_background():
     threading.Thread(target=work, daemon=True).start()
 
 
-def open_in_studio(name):
-    """Open the plate (3MF) with the same name as the STL, or the STL itself, in Bambu Studio's Prepare view (macOS)."""
-    stl = (PRINT / Path(name).name).resolve()
-    if stl.parent != PRINT.resolve() or stl.suffix != ".stl" or not stl.is_file():
+MODEL_APPS = {
+    "bambu": ("BambuStudio", (".3mf", ".stl")),
+    "orca": ("OrcaSlicer", (".3mf", ".stl")),
+    "prusa": ("PrusaSlicer", (".3mf", ".stl")),
+    "freecad": ("FreeCAD", (".step", ".stl")),
+}
+
+
+def open_model(name, app):
+    """Open a finished print in an allowlisted macOS app."""
+    if app not in MODEL_APPS:
+        raise ValueError("unknown 3D app")
+    if sys.platform != "darwin":
+        raise ValueError("Opening 3D apps from the hub requires macOS. Open the file from hardware/print instead.")
+    root = PRINT.resolve()
+    stl = (root / Path(name).name).resolve()
+    if stl.parent != root or stl.suffix != ".stl" or not stl.is_file():
         raise ValueError("unknown model")
-    target = stl.with_suffix(".3mf") if stl.with_suffix(".3mf").is_file() else stl
-    r = subprocess.run(["open", "-a", "BambuStudio", str(target)], capture_output=True, text=True, check=False)
-    if r.returncode != 0:
-        raise ValueError("could not open Bambu Studio: " + (r.stderr.strip() or "is it installed in /Applications?"))
+
+    application, formats = MODEL_APPS[app]
+    candidates = (stl.with_suffix(suffix).resolve() for suffix in formats)
+    target = next((path for path in candidates if path.parent == root and path.is_file()), stl)
+    result = subprocess.run(["open", "-a", application, str(target)], capture_output=True, text=True, check=False)
+    if result.returncode:
+        raise ValueError(f"Could not open {application}. " + (result.stderr.strip() or "Check that the app is installed."))
     return {"opened": target.name}
 
 
@@ -240,8 +256,9 @@ class Handler(BaseHTTPRequestHandler):
             if size > 5_000_000:
                 raise ValueError("request too large")
             data = json.loads(self.rfile.read(size))
-            if self.path == "/api/open-in-studio":
-                return self.send(json.dumps(open_in_studio(data["name"])))
+            if self.path in ("/api/open-model", "/api/open-in-studio"):
+                app = "bambu" if self.path == "/api/open-in-studio" else data["app"]
+                return self.send(json.dumps(open_model(data["name"], app)))
             if self.path == "/api/parameters":
                 save_params(data)
                 rebuild_in_background()

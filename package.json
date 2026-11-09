@@ -1,6 +1,6 @@
 {
   "name": "hardware-knowledge-hub",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A local project notebook for your first hardware build",
   "license": "MIT",
   "bin": {"hardware-knowledge-hub": "cli.cjs"},
