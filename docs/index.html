@@ -3,64 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hardware Knowledge Hub · Bike Logger demo</title>
+<meta name="description" content="A project notebook for your first hardware build. Explore the wiring, build notes and interactive 3D parts of a real bike logger.">
+<meta name="theme-color" content="#111814">
+<title>Hardware Knowledge Hub</title>
+<link rel="stylesheet" href="landing.css">
 <script>
-  // Links here are relative (the public copy lives under /bike-logger/hardware/), so the address must end in "/".
-  if (!location.pathname.endsWith("/")) location.replace(location.pathname + "/" + location.search + location.hash);
+  if (/^#(bike|wiring|notes|3d)$/.test(location.hash)) location.replace("./demo/" + location.hash);
 </script>
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="blob one" aria-hidden="true"></div><div class="blob two" aria-hidden="true"></div>
-<header>
-  <nav id="sitenav" aria-label="Demo links">
-    <a href="https://github.com/murathany7/hardware-knowledge-hub">Hardware Knowledge Hub</a>
-  </nav>
-  <h1><span class="site-only">Bike Logger demo</span><span class="local-only">Hardware knowledge</span></h1>
-  <button id="view-bike">Bike</button>
-  <button id="view-wiring">Wiring</button>
-  <button id="view-kb">Notes</button>
-  <button id="view-3d">3D parts</button>
-  <span id="status"></span>
-  <button id="save" class="primary" disabled>Save &amp; rebuild CLAUDE.md</button>
-</header>
-<p class="demo-intro">New to hardware? Explore a real build. Start with where the parts go, then see how they connect and what changed along the way.</p>
-<main>
-  <nav id="nav" aria-label="Sections"></nav>
-  <section id="editor" aria-label="Editor"></section>
-  <aside id="seen" aria-label="What Claude sees">
-    <div class="tabs" id="tabs"></div>
-    <div class="meta" id="meta"></div>
-    <pre id="preview"></pre>
-  </aside>
+<header class="top"><nav class="wrap" aria-label="Main">
+  <a class="brand" href="./"><span class="mark" aria-hidden="true">⌘</span> Hardware Knowledge Hub</a>
+  <a href="https://github.com/murathany7/hardware-knowledge-hub">GitHub ↗</a>
+</nav></header>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <p class="label"><span></span> Open source · Beginner friendly</p>
+      <h1>Make your first hardware build <em>easier to follow.</em></h1>
+      <p class="intro">A project notebook for the parts you buy, the wires you connect, and the things you figure out along the way.</p>
+      <div class="actions">
+        <a class="button primary" href="demo/">Explore Bike Logger <span aria-hidden="true">↗</span></a>
+        <a class="button" href="#start">Run it locally</a>
+      </div>
+    </div>
+    <aside class="field" aria-label="What you can document">
+      <div class="field-head"><span>BUILD NOTEBOOK</span><span>01 / BIKE LOGGER</span></div>
+      <p><b>01</b> Where does each part go?</p>
+      <p><b>02</b> What connects to what?</p>
+      <p><b>03</b> What changed, and why?</p>
+      <p><b>04</b> Which parts do I print?</p>
+    </aside>
+  </section>
+
+  <section class="example" aria-labelledby="example-title">
+    <p class="label"><span></span> A real build you can explore</p>
+    <h2 id="example-title">Meet Bike Logger.</h2>
+    <p class="intro">See how a Raspberry Pi, camera, and sensors fit on a city bike. Click around the live layout or jump straight to a view.</p>
+    <div class="preview">
+      <div class="preview-bar"><span><i></i> LIVE EXAMPLE</span><a href="demo/">Open full demo ↗</a></div>
+      <iframe title="Interactive Bike Logger layout" src="demo/#bike" loading="lazy"></iframe>
+    </div>
+    <div class="cards">
+      <a href="demo/#bike"><span>01</span><h3>Bike layout ↗</h3><p>Find where the electronics and mounts sit on the bike.</p></a>
+      <a href="demo/#wiring"><span>02</span><h3>Wiring ↗</h3><p>Trace connections from the Pi to the sensors.</p></a>
+      <a href="demo/#notes"><span>03</span><h3>Build notes ↗</h3><p>Read the parts lists, design decisions, and print log.</p></a>
+      <a href="demo/#3d"><span>04</span><h3>3D parts ↗</h3><p>Rotate the enclosure and inspect the printed pieces.</p></a>
+    </div>
+  </section>
+
+  <section id="start" class="start">
+    <div>
+      <p class="label"><span></span> Make a local copy</p>
+      <h2>Start with the example.</h2>
+      <p>Install the Python package from the release, then create an editable copy of Bike Logger. The editor runs on your computer.</p>
+      <a class="button" href="https://github.com/murathany7/hardware-knowledge-hub/releases/latest">Get the release ↗</a>
+    </div>
+    <pre aria-label="Python setup commands"><code>pip install hardware_knowledge_hub-0.1.0-py3-none-any.whl
+hardware-knowledge-hub init my-first-build
+cd my-first-build
+python3 hardware/knowledge/kb.py serve</code></pre>
+  </section>
 </main>
-<div id="viewer" hidden>
-  <nav id="parts" aria-label="Parts"></nav>
-  <div id="stage">
-    <canvas id="gl"></canvas>
-    <div id="info"></div>
-    <button id="studio" title="Opens the plate (3MF) or the STL in Bambu Studio's Prepare view">Open in Bambu Studio</button>
-    <div id="hint">Click a part: its dimensions open on the right. Drag: rotate &middot; Shift/right-drag: pan &middot; Wheel: zoom &middot; Double-click: reset. Reloads on its own when the file changes.</div>
-  </div>
-  <aside id="drawer" aria-label="Dimensions" hidden></aside>
-</div>
-<div id="bike" hidden>
-  <div id="bstage">
-    <svg id="bsvg" role="img" aria-label="Side view of the bike with the logger parts"></svg>
-    <div id="bhint">Click a part or a tube: it opens on the right, edit it there. Drag a part to move it on the drawing. Seen from the right (drive) side; dashed = on the left side.</div>
-  </div>
-  <aside id="bpanel" aria-label="Selected item"></aside>
-</div>
-<div id="wiring" hidden>
-  <div id="wstage">
-    <svg id="wsvg" role="img" aria-label="Wiring between the Raspberry Pi header, the breadboard and the sensors"></svg>
-    <div id="whint">Click a wire, a Pi pin or a breadboard hole: it opens on the right. Holes in one numbered column (a-e or f-j) are joined; so is each rail.</div>
-  </div>
-  <aside id="wpanel" aria-label="Selected wire"></aside>
-</div>
-<script src="app.js"></script>
-<script src="viewer.js"></script>
-<script src="bike.js"></script>
-<script src="wiring.js"></script>
+<footer class="wrap"><span>Hardware Knowledge Hub · MIT</span><a href="https://github.com/murathany7/hardware-knowledge-hub">Source on GitHub ↗</a></footer>
 </body>
 </html>

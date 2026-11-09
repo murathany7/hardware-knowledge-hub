@@ -20,7 +20,7 @@ Open http://127.0.0.1:8765. The Notes view edits the example and saves it to `ha
 python3 -m http.server 8000
 ```
 
-Open http://localhost:8000/docs/. The demo is read-only and runs on static hosting. To publish it, select GitHub Actions in GitHub Pages settings and run the Publish demo workflow.
+Open http://localhost:8000/docs/ (landing page) or http://localhost:8000/docs/demo/ (interactive example). The demo is read-only and runs on static hosting. To publish it, select GitHub Actions in GitHub Pages settings and run the Publish demo workflow.
 
 The example comes from [Bike Logger](https://murathanyildirim.com/bike-logger/).
 
