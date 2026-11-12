@@ -102,6 +102,29 @@ function drawNav() {
 const inline = (text) => String(text).split("`").map((part, i) => (i % 2 ? el("code", { textContent: part }) : part));
 const paras = (text) => String(text).split(/\n\s*\n/).filter((p) => p.trim()).map((p) => el("p", {}, ...inline(p)));
 
+function tableCsv(s) {
+  const cell = (value) => {
+    const text = String(value ?? "");
+    return /[",\r\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+  };
+  return [s.columns, ...s.rows].map((row) => s.columns.map((_, c) => cell(row[c])).join(",")).join("\r\n") + "\r\n";
+}
+
+function csvButton(s) {
+  const button = el("button", { textContent: "Download CSV" });
+  button.onclick = () => {
+    // Read the current rows, including unsaved edits. The BOM helps spreadsheets read UTF-8.
+    const blob = new Blob(["\ufeff", tableCsv(s)], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = el("a", { href: url, download: (s.id || "table").replace(/[^a-z0-9_-]/gi, "_") + ".csv" });
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+  return button;
+}
+
 function drawDoc(s) {
   const box = $("editor");
   box.replaceChildren(el("h2", { textContent: s.title }), ...(s.intro ? paras(s.intro).map((p) => ((p.className = "lead"), p)) : []));
@@ -118,6 +141,7 @@ function drawDoc(s) {
       ? el("div", { className: "doctable" }, el("table", {}, el("tr", {}, ...s.columns.map((c) => el("th", { textContent: c }))),
         ...s.rows.map((r) => el("tr", {}, ...s.columns.map((_, c) => el("td", {}, ...inline(r[c] || "")))))))
       : el("p", { className: "hint", textContent: "Nothing here yet." }));
+    box.append(el("div", { className: "actions" }, csvButton(s)));
   }
   box.scrollTop = 0;
 }
@@ -238,7 +262,7 @@ function drawEditor() {
     box.append(el("label", { textContent: "Rows" }), table);
     const add = el("button", { textContent: "+ Add row" });
     add.onclick = () => { s.rows.push(s.columns.map(() => "")); changed(); drawEditor(); };
-    box.append(el("div", { className: "actions" }, add));
+    box.append(el("div", { className: "actions" }, add, csvButton(s)));
   }
 
   const actions = el("div", { className: "actions" });
