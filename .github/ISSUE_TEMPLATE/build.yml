@@ -1,0 +1,19 @@
+name: I used it for my build
+description: Tell us about your project and what the Notes could not hold. No bug needed.
+labels: [question]
+body:
+  - type: textarea
+    id: build
+    attributes:
+      label: What are you building?
+      description: A sentence and, if you like, a photo or a link.
+    validations:
+      required: true
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked?
+  - type: textarea
+    id: missing
+    attributes:
+      label: What was missing or awkward?

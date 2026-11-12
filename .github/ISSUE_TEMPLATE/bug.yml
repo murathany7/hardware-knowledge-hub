@@ -1,0 +1,33 @@
+name: Something is broken
+description: The editor, the installer or the demo does not do what it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to see it
+      placeholder: "1. hardware-knowledge-hub init test\n2. Open 3D parts\n3. ..."
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options: [Local editor, Hosted demo, Installer (pip), Installer (npm), CAD scripts]
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Operating system, browser and Python version
+      placeholder: macOS 15, Firefox 132, Python 3.12
+  - type: textarea
+    id: output
+    attributes:
+      label: Terminal output or a screenshot

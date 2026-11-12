@@ -1,0 +1,45 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ['3.10', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generated notes are up to date
+        run: python hardware/knowledge/kb.py check
+      - name: Tests
+        run: python -m unittest discover -s tests -v
+      - name: Editor scripts parse
+        run: for f in hardware/knowledge/ui/*.js cli.cjs; do node --check "$f"; done
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: The built package creates a working project
+        run: |
+          python -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          hardware-knowledge-hub init my-first-build
+          python my-first-build/hardware/knowledge/kb.py check

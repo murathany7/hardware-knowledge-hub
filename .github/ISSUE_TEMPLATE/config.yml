@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Try the live demo
+    url: https://murathany7.github.io/hardware-knowledge-hub/
+    about: The Bike Logger example, running in your browser.
+  - name: Report a security problem privately
+    url: https://github.com/murathany7/hardware-knowledge-hub/security/advisories/new
+    about: Please do not open a public issue for a vulnerability.

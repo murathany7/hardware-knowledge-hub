@@ -1,5 +1,7 @@
 # Hardware Knowledge Hub
 
+[![Checks](https://github.com/murathany7/hardware-knowledge-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/murathany7/hardware-knowledge-hub/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/hardware-knowledge-hub)](https://pypi.org/project/hardware-knowledge-hub/) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/murathany7/hardware-knowledge-hub/blob/main/LICENSE)
+
 **Give your AI assistant the whole build, one time.**
 
 A hardware project comes with dozens of facts an assistant needs to make a good suggestion. Which parts are on hand? Which GPIO pins are already taken? What actually fits in the enclosure? Keep those details in one editable project notebook, then let your coding assistant read the same notes each time you work together.
@@ -44,4 +46,10 @@ Use **Notes** for your own parts, measurements, decisions, and build log. The Bi
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/murathany7/hardware-knowledge-hub/blob/main/CONTRIBUTING.md) for local development. The project is MIT-licensed.
+The hub is one Python file and a few plain JavaScript files, with no dependencies and no build step, so it is quick to get into. You do not need a 3D printer or a Raspberry Pi to help.
+
+- **Try it and tell us.** [Report a problem, share an idea, or describe your build](https://github.com/murathany7/hardware-knowledge-hub/issues/new/choose).
+- **Pick something small.** Issues marked [good first issue](https://github.com/murathany7/hardware-knowledge-hub/labels/good%20first%20issue) are sized for a first pull request.
+- **See where it is going.** The [roadmap](https://github.com/murathany7/hardware-knowledge-hub/blob/main/ROADMAP.md) lists the larger directions: a blank starter, other boards in the Wiring view, Linux and Windows.
+
+[CONTRIBUTING.md](https://github.com/murathany7/hardware-knowledge-hub/blob/main/CONTRIBUTING.md) covers setup, where things are, and the checks to run. The project is MIT-licensed.
