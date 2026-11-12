@@ -131,6 +131,7 @@ def box_v2():
                                     "Deck columns, power bank cradle and IMU pocket inside; the four ultrasonic boards stand on the rear wall.")),
         ("lid", "Lid", False, "Hidden by default so you can see inside. Ten snap clips on the skirt hold it shut; the 14 M3 screws add the force."),
         ("deck", "Deck", True, "Removable plate on six columns: Pi, breadboard, GPS, spare bay, cable lane. The power bank lies under it."),
+        ("imu cover", "IMU cover", True, "Screwed over the IMU pocket on the floor; presses the board down through a foam pad."),
         ("board clamp", "Board clamp bar", True, "Holds the top edges of the four ultrasonic boards; two M3 into the end posts."),
         ("ribbon clamp", "Ribbon clamp and visor", True, "Presses foam onto the camera ribbon where it leaves the +Y wall; its roof reaches back to the wall."),
         ("rear hood", "Rear rain hood", True, "Over the four probe glands; foam strip between its roof and cheeks and the wall."),

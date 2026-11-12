@@ -294,5 +294,6 @@ html.site #wpanel .item:hover, html.site #bpanel .item:hover { background: var(-
   .readonly nav#nav { flex-wrap: nowrap; overflow-x: auto; padding: 8px; }
   .readonly nav#nav button { white-space: nowrap; flex: none; }
 }
+#open-result:not(:empty) { display: block; max-width: 32ch; padding: 6px; background: var(--panel); }
 
 .demo-intro { margin: 0; padding: 8px 20px; color: var(--muted); }

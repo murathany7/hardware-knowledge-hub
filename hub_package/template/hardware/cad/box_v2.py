@@ -15,7 +15,8 @@ Two levels inside, so the footprint stays small and every cable has somewhere to
     sits straight in front of its own gland, so the probe cable runs from the plug out of the box without a bend.
     The boards' bottom edges sit in slots in a ledge on the wall, a screwed clamp bar holds their top edges. Their
     4-pin headers (middle of a long edge) face each other in pairs across a 10 mm wire gap.
-  - The IMU sits on the floor beside the bank, fixed to the box itself (best for vibration readings).
+  - The IMU sits on the floor beside the bank, fixed to the box itself (best for vibration readings), under a removable
+    cover screwed to two bosses that presses it down through a foam pad.
   - Gutter: the deck stops 6 mm short of the side and front walls, so cables drop down past it.
   - Front: the first 16 mm inside the front wall stay clear above the deck for gland nuts and cable bends.
 
@@ -34,7 +35,7 @@ Weather and vibration:
     along two dovetail rails on a rack plate and is locked by one M3 screw at the back. The rack plate is strapped to
     the rack with hose clamps or UV zip ties through a field of slots, so it suits any rail spacing.
 
-Writes box_v2_body / _lid / _deck / _board_clamp / _shoe / _rack_plate / _ribbon_clamp / _rear_hood / _front_hood (.stl each, .step assembly) and
+Writes box_v2_body / _lid / _deck / _board_clamp / _imu_cover / _shoe / _rack_plate / _ribbon_clamp / _rear_hood / _front_hood (.stl each, .step assembly) and
 box_v2_plate*.3mf into --out. Stops with an error if a check fails.
 """
 import argparse
@@ -44,7 +45,8 @@ import cadquery as cq
 
 # ----------------------------------------------------------------------------- PARAMETERS (mm)
 # box
-IN_L, IN_W, IN_H = 216.0, 164.0, 78.0   # clear space inside (along bike, across, floor to lid underside)
+IN_L, IN_W, IN_H = 216.0, 164.0, 128.0  # clear space inside (along bike, across, floor to lid underside); 78 -> 128 on 2026-11-09
+DECK_LIFT = 20.0                        # extra room between the power bank and the deck (2026-11-09: 20 of the 50 mm went below the deck)
 IN_R = 6.0                              # inside corner radius (vertical edges)
 WALL, FLOOR = 3.0, 3.0                  # wall and floor thickness
 BAND_OUT, BAND_H = 9.0, 12.0            # top band: sticks out past the wall, height (inserts for the lid screws live in it)
@@ -73,20 +75,33 @@ CLIP_STRAIN = 0.02                      # most bending strain allowed in the arm
 # deck and what holds it
 COL = 14.0                              # column block size (corner columns are COL x COL, middle ones 12 x COL)
 DECK_T, DECK_LIP_W, DECK_LIP_H = 3.0, 2.0, 4.0
+DECK_SCREW_HEAD_D, DECK_SCREW_HEAD_DEPTH = 6.2, 1.2  # shallow M3 pan-head seats, leaving 1.8 mm under each head
+SCREW_KEEP = DECK_SCREW_HEAD_D / 2 + 1.0  # deck items and their walls stay this far from a deck screw's centre (head and driver go in from above)
 GUTTER = 6.0                            # deck edge to inside wall: the cable gutter
 END_KEEP = 16.0                         # kept clear above the deck inside the front wall (gland nuts, cable bends)
 DECK_REAR = 74.0                        # the deck ends here (X); behind it the ultrasonic boards stand on the rear wall
 FIT = 0.4                               # clearance per side in every pocket
 POCKET_WALL = 2.4
 TIE_SLOT = (4.4, 2.2)                   # zip-tie slot (along the tie width, across)
+TIE_NOTCH = 2.4                         # depth of a tie notch in the deck's edge (through the lip), where an item sits against the edge
+TIE_GAP = 2.0                           # least plate left between two tie openings, and between one and a column
+LANE_TIES = (-82.0, -30.0, 0.0, 35.0, 65.0)   # X of the tie pairs along the cable lane
+SPARE_SPAN = 16.0                       # spare bay: distance between the two slots of a tie pair
+PASS = (30.0, 10.0)                     # cable pass-down slot to the bank (along X, across)
+PASS_X = -55.0                          # its centre along X (it sits in the middle of the lane)
 # electronics (ESTIMATE where noted; the rest from hardware/CLAUDE.md)
 BANK = (152.0, 72.0, 27.0)              # UGREEN Nexode 20000 mAh 45 W: 152 x 72 measured by the user, thickness ESTIMATE
 BANK_PAD = 2.0                          # foam pad between the bank and the deck
 PI = (90.0, 61.0, 31.0)                 # Pi 5 in its case, lying flat (case height an estimate)
 PI_PLUGS = 30.0                         # room in front of the Pi's USB end for plugs
-BB = (87.0, 54.0, 10.0)                 # breadboard, lying flat
+BB = (84.0, 56.0, 10.0)                 # breadboard holder size, lying flat (87 x 54 made 3 mm shorter, 2 mm wider on 2026-11-09)
 BB_WIRES = 25.0                         # jumper wires stand this high above it
 IMU = (25.6, 22.7, 4.6)                 # BNO085
+IMU_FOAM = 0.8                          # 1 mm foam pad on the board, squeezed to this under the cover
+IMU_WALL_H = IMU[2] + IMU_FOAM          # IMU pocket walls: the cover sits on them
+IMU_COVER_T = 2.0                       # removable IMU cover plate
+IMU_SCREW = (4.5, 8.0, 4.5)             # cover screw bosses: past each end of the pocket, offset to -Y, boss radius
+IMU_INSERT_DEPTH = 6.0                  # M3 x 5.7 insert; leaves 2.4 mm of floor under it
 GPS = (50.0, 38.0, 20.0)                # USB GPS, cable out of the -X end
 US = (42.0, 29.0, 1.2)                  # AJ-SR04M board: long side (stands vertical), short side, PCB. 42 x 29 x 18 overall (retailer spec)
 US_N = 4
@@ -139,7 +154,7 @@ OUT_L, OUT_W = IN_L + 2 * WALL, IN_W + 2 * WALL
 BODY_H = FLOOR + IN_H
 HX, HY = IN_L / 2, IN_W / 2              # inside half sizes
 Z0 = FLOOR                               # inside floor
-COL_TOP = Z0 + BANK[2] + FIT + BANK_PAD  # deck underside
+COL_TOP = Z0 + BANK[2] + FIT + BANK_PAD + DECK_LIFT   # deck underside
 DECK_Z = COL_TOP + DECK_T                # deck top
 X_FRONT, X_REAR = -HX + END_KEEP, DECK_REAR - DECK_LIP_W - 2.0   # items on the deck stay between these
 YU = HY - GUTTER                         # and within +-YU
@@ -158,7 +173,7 @@ PI_O, BB_O, IMU_O, GPS_O = pocket(PI), pocket(BB), pocket(IMU), pocket(GPS_FP)
 # deck row A (+Y): Pi, room for its USB plugs, spare bay;  row B (-Y): breadboard, GPS
 PI_C = (X_FRONT + PI_O[0] / 2, YU - PI_O[1] / 2)
 BB_C = (X_FRONT + BB_O[0] / 2, -YU + BB_O[1] / 2)
-GPS_C = (X_REAR - GPS_O[0] / 2, -YU + GPS_O[1] / 2)
+GPS_C = (X_REAR - GPS_O[0] / 2, -(HY - COL / 2) + SCREW_KEEP + GPS_O[1] / 2)   # clear of the rear -Y deck screw
 SPARE = (PI_C[0] + PI_O[0] / 2 + PI_PLUGS, X_REAR)            # spare bay in row A (X from, to)
 # ultrasonic boards on the rear wall: plug -> straight cable -> gland nut -> wall
 US_BACK = HX - GLAND_NUT[1] - US_STRAIGHT - US_PLUG[0]        # X of each board's back face
@@ -179,11 +194,14 @@ CLAMP_Z = US_BOT + US[0] + 0.4 - (US_SLOT[1] + 0.8)           # clamp bar unders
 POST_Y = _span / 2 + 0.6                                      # end posts for the clamp bar start here
 POST_C = ((LEDGE_X + LEDGE_X + CLAMP[0]) / 2, (POST_Y + HY) / 2)
 # floor: the IMU sits beside the power bank, fixed to the box itself (no screws through the floor: tape or silicone)
-IMU_C = (30.0, -(BANK[1] / 2 + FIT + POCKET_WALL + 3.0 + IMU_O[1] / 2))
+IMU_C = (33.0, -(BANK[1] / 2 + FIT + POCKET_WALL + 3.0 + IMU_O[1] / 2))
+IMU_SCREWS = [(IMU_C[0] + s * (IMU_O[0] / 2 + IMU_SCREW[0]), IMU_C[1] - IMU_SCREW[1]) for s in (-1, 1)]
 LANE = (BB_C[1] + BB_O[1] / 2, PI_C[1] - PI_O[1] / 2)           # cable lane between the rows (Y from, to)
 LANE_Y = sum(LANE) / 2
+PASS_C = (PASS_X, LANE_Y)
 BANK_C = (0.0, 0.0)                                             # power bank on the floor, ports towards -X
-COLUMNS = [(x, sy * (HY - COL / 2)) for x in (-(HX - COL / 2), 0.0, DECK_REAR - 8.0) for sy in (-1, 1)]
+COL_MID_X = PI_C[0] + PI_O[0] / 2 + SCREW_KEEP                 # middle columns: just past the Pi's brackets, so the screw is not under the Pi
+COLUMNS = [(x, sy * (HY - COL / 2)) for x in (-(HX - COL / 2), COL_MID_X, DECK_REAR - 8.0) for sy in (-1, 1)]
 LID_SCREWS = [(x, s * (HY + WALL + SCREW_IN - WALL)) for x in SCREWS_X for s in (-1, 1)]
 LID_SCREWS += [(s * (HX + SCREW_IN), y) for y in SCREWS_Y for s in (-1, 1)]
 BAND_FACE = WALL + BAND_OUT                                     # band outer face, outwards of the inside face of the wall
@@ -269,12 +287,38 @@ def walls_of(outer_l, outer_w, inner_l, inner_w, h, cx, cy, z0, open_side=None, 
     return w
 
 
-def tie_pair(cx, cy, span, along="y"):
-    """Two zip-tie slots `span` apart; a tie goes down one, under the deck, and up the other."""
-    a, b = TIE_SLOT
-    if along == "y":  # tie runs across Y (holds something lying along X)
-        return box(a, b, 3 * DECK_T, cx, cy - span / 2, COL_TOP - E).union(box(a, b, 3 * DECK_T, cx, cy + span / 2, COL_TOP - E))
-    return box(b, a, 3 * DECK_T, cx - span / 2, cy, COL_TOP - E).union(box(b, a, 3 * DECK_T, cx + span / 2, cy, COL_TOP - E))
+def deck_ties():
+    """Zip-tie points in the deck as (x, y, size along X, size along Y, kind). A tie goes down one opening, under the
+    deck and up the other. "slot" is a hole through the plate; "notch" is cut into the deck's edge where an item sits
+    against it (no room for a slot: the tie goes round the edge, through the gutter); "pass" is the cable pass-down."""
+    a, w = TIE_SLOT
+    py = PI[1] + 2 * FIT
+    t = [(PASS_C[0], PASS_C[1], *PASS, "pass")]
+
+    def pair(cx, cy, span):   # tie runs across Y (holds something lying along X)
+        t.extend([(cx, cy - span / 2, a, w, "slot"), (cx, cy + span / 2, a, w, "slot")])
+
+    def notch_y(cx, sy):      # in the +Y or -Y edge
+        t.append((cx, sy * (YU - TIE_NOTCH / 2 + E / 2), a, TIE_NOTCH + E, "notch"))
+    for x in LANE_TIES:       # cable lane
+        pair(x, LANE_Y, LANE[1] - LANE[0] - 5.0)
+    for dx in (-25.0, 25.0):  # Pi: lane side slot, notch in the +Y edge
+        t.append((PI_C[0] + dx, PI_C[1] - (py / 2 + POCKET_WALL + 2.0), a, w, "slot"))
+        notch_y(PI_C[0] + dx, 1)
+    t.append((BB_C[0], BB_C[1] + BB_O[1] / 2 + 2.0, a, w, "slot"))   # breadboard: lane side slot, notch in the -Y edge
+    notch_y(BB_C[0], -1)
+    gy = GPS_C[1] - 8.0       # GPS: tie along X, slot on its front side, notch in the rear edge
+    t.append((GPS_C[0] - GPS_O[0] / 2 - 2.0, gy, w, a, "slot"))
+    t.append((DECK_REAR - TIE_NOTCH / 2 + E / 2, gy, TIE_NOTCH + E, a, "notch"))
+    y_hi = min(PI_C[1] + 20.0, HY - COL - TIE_GAP - w / 2 - SPARE_SPAN / 2)   # spare bay: clear of the rear column
+    for x in (SPARE[0] + 8.0, SPARE[1] - 8.0):
+        for y in (PI_C[1] - 20.0, y_hi):
+            pair(x, y, SPARE_SPAN)
+    return t
+
+
+def tie_cut(x, y, lx, ly):
+    return box(lx, ly, DECK_T + 12.0 + E, x, y, COL_TOP - E)   # through the plate and whatever stands on it there
 
 
 # ----------------------------------------------------------------------------- body
@@ -294,8 +338,11 @@ def body():
     bo = pocket(BANK)
     b = b.union(walls_of(bo[0], bo[1], BANK[0] + 2 * FIT, BANK[1] + 2 * FIT, 10.0, *BANK_C, Z0 - E / 2, "-x", BANK[1] + 2 * FIT))
     # IMU pocket on the floor, cable openings at both ends
-    b = b.union(walls_of(*IMU_O, IMU[0] + 2 * FIT, IMU[1] + 2 * FIT, 4.0 + E, *IMU_C, Z0 - E, "-x", 9.0)
-                .cut(box(IMU_O[0] / 2, 9.0, 6.0, IMU_C[0] + IMU_O[0] / 2, IMU_C[1], Z0)))
+    b = b.union(walls_of(*IMU_O, IMU[0] + 2 * FIT, IMU[1] + 2 * FIT, IMU_WALL_H + E, *IMU_C, Z0 - E, "-x", 9.0)
+                .cut(box(IMU_O[0] / 2, 9.0, IMU_WALL_H + E, IMU_C[0] + IMU_O[0] / 2, IMU_C[1], Z0)))
+    for x, y in IMU_SCREWS:   # two bosses for the IMU cover screws, same height as the pocket walls
+        b = b.union(cyl(IMU_SCREW[2], IMU_WALL_H + E, x, y, Z0 - E))
+        b = b.cut(cyl(INSERT_D / 2, IMU_INSERT_DEPTH + E, x, y, Z0 + IMU_WALL_H - IMU_INSERT_DEPTH))
     # floor bosses for the shoe screws: blind holes from below
     for x, y in BOSSES:
         b = b.union(cyl(BOSS_R, BOSS_H + E, x, y, Z0 - E))
@@ -425,11 +472,12 @@ def lid():
 
 
 # ----------------------------------------------------------------------------- deck
-def deck():
+def deck(ties=True):
     dl, dw, dc = DECK_REAR - DECK_FRONT, IN_W - 2 * GUTTER, (DECK_REAR + DECK_FRONT) / 2
     d = rbox(dl, dw, IN_R, COL_TOP, DECK_T, dc)
-    for cx, cy in COLUMNS:  # ears reach out over the columns
+    for cx, cy in COLUMNS:  # lug reaches over each box column; hole stays fully enclosed
         d = d.union(cyl(5.0, DECK_T, cx, cy, COL_TOP))
+        d = d.union(box(10.0, 5.0, DECK_T, cx, cy + (2.5 if cy > 0 else -2.5), COL_TOP))
     lip = rbox(dl, dw, IN_R, DECK_Z - E, DECK_LIP_H + E, dc).cut(rbox(dl - 2 * DECK_LIP_W, dw - 2 * DECK_LIP_W, IN_R - DECK_LIP_W, DECK_Z - 2 * E, DECK_LIP_H + 3 * E, dc))
     d = d.union(lip)
     # Pi: four corner brackets (low, so the case's ports stay free) and two straps
@@ -442,20 +490,27 @@ def deck():
     # breadboard tray, GPS cradle (cable out of the +Y end, into the lane)
     d = d.union(walls_of(*BB_O, BB[0] + 2 * FIT, BB[1] + 2 * FIT, 5.0 + E, *BB_C, DECK_Z - E))
     d = d.union(walls_of(*GPS_O, GPS_FP[0] + 2 * FIT, GPS_FP[1] + 2 * FIT, 10.0 + E, *GPS_C, DECK_Z - E, "+y", 14.0))
-    # cable pass-down to the bank, zip-tie anchors
-    d = d.cut(box(30.0, 10.0, 3 * DECK_T, -55.0, LANE_Y, COL_TOP - E))
-    for x in (-75.0, -30.0, 0.0, 35.0, 65.0):
-        d = d.cut(tie_pair(x, LANE_Y, LANE[1] - LANE[0] - 5.0))
-    for dx in (-25.0, 25.0):
-        d = d.cut(tie_pair(PI_C[0] + dx, PI_C[1], py + 2 * POCKET_WALL + 4.0))
-    d = d.cut(tie_pair(GPS_C[0], GPS_C[1] - 8.0, GPS_O[0] + 4.0, along="x"))
-    for x in (SPARE[0] + 8.0, SPARE[1] - 8.0):   # spare bay: tie points for a future board
-        for y in (PI_C[1] - 20.0, PI_C[1] + 20.0):
-            d = d.cut(tie_pair(x, y, 16.0))
-    d = d.cut(tie_pair(BB_C[0], BB_C[1], BB_O[1] + 4.0))
+    if ties:   # cable pass-down to the bank, zip-tie slots and edge notches
+        for x, y, lx, ly, _ in deck_ties():
+            d = d.cut(tie_cut(x, y, lx, ly))
     for cx, cy in COLUMNS:
         d = d.cut(cyl(CLEAR_D / 2, DECK_T + 2 * E, cx, cy, COL_TOP - E))
+        # head seat, open all the way up: the lip is cut away over each screw so the head and the driver get in
+        d = d.cut(cyl(DECK_SCREW_HEAD_D / 2, DECK_SCREW_HEAD_DEPTH + DECK_LIP_H + E, cx, cy, DECK_Z - DECK_SCREW_HEAD_DEPTH))
     return d
+
+
+def imu_cover():
+    """Plate over the IMU pocket, screwed to two bosses: presses the board onto the floor through a foam pad."""
+    xs = [x for x, _ in IMU_SCREWS]
+    x0, x1 = min(xs) - IMU_SCREW[2], max(xs) + IMU_SCREW[2]
+    y1 = IMU_C[1] + IMU_O[1] / 2
+    y0 = min(IMU_C[1] - IMU_O[1] / 2, IMU_SCREWS[0][1] - IMU_SCREW[2])
+    y0 = max(y0, -(HY - COL) + FIT)   # its -Y edge stops short of the deck columns (the screw bosses merge into them)
+    c = rbox(x1 - x0, y1 - y0, 2.0, Z0 + IMU_WALL_H, IMU_COVER_T, (x0 + x1) / 2, (y0 + y1) / 2)
+    for x, y in IMU_SCREWS:
+        c = c.cut(cyl(CLEAR_D / 2, IMU_COVER_T + 2 * E, x, y, Z0 + IMU_WALL_H - E))
+    return c
 
 
 # ----------------------------------------------------------------------------- mount
@@ -607,7 +662,7 @@ def check(parts):
     for kname, k in keepouts().items():
         for n in items:
             assert vol(dm[n], k) < 0.05, f"{n} sits in the {kname}"
-    pairs = [("body", "lid"), ("body", "deck"), ("body", "shoe"), ("shoe", "rack plate"), ("body", "ribbon clamp"), ("lid", "deck"),
+    pairs = [("body", "lid"), ("body", "deck"), ("body", "shoe"), ("shoe", "rack plate"), ("body", "ribbon clamp"), ("lid", "deck"), ("body", "imu cover"), ("deck", "imu cover"),
              ("body", "board clamp"), ("lid", "board clamp"), ("deck", "board clamp"),
              ("body", "rear hood"), ("body", "front hood"), ("lid", "rear hood"), ("lid", "front hood"),
              ("rack plate", "rear hood"), ("rack plate", "front hood"), ("body", "ribbon clamp")]
@@ -623,6 +678,33 @@ def check(parts):
         assert z + GLAND_NUT[0] / 2 <= BODY_H - BAND_H - BAND_OUT + 0.5, "probe gland hex hits the band chamfer"
         assert abs(y) + GLAND_NUT[0] / 2 <= HY + WALL - (IN_R + WALL) + WALL, "probe gland off the flat of the wall"
     assert DECK_REAR <= LEDGE_X - 4.0, "deck too close to the boards"
+    # deck screws: nothing of the deck in the screw's way, no wall, bracket or item over the head
+    for cx, cy in COLUMNS:
+        where = f"deck screw at {cx:.1f}, {cy:.1f}"
+        seat = DECK_Z - DECK_SCREW_HEAD_DEPTH
+        assert vol(parts["deck"], cyl(CLEAR_D / 2 - 0.05, 60.0, cx, cy, COL_TOP - E)) < 0.05, f"{where}: hole blocked"
+        assert vol(parts["deck"], cyl(DECK_SCREW_HEAD_D / 2 - 0.05, 60.0, cx, cy, seat + 0.01)) < 0.05, f"{where}: head seat covered"
+        keep = cyl(SCREW_KEEP - 0.05, 60.0, cx, cy, seat + DECK_LIP_H + DECK_SCREW_HEAD_DEPTH + 0.01)
+        assert vol(parts["deck"], keep) < 0.05, f"{where}: a wall or bracket too close"
+        for dname, dmy in dm.items():
+            assert vol(dmy, keep) < 0.05, f"{where} is under the {dname}"
+    # zip-tie openings: slots are whole holes in the bare plate inside the lip, notches reach the edge, nothing sits
+    # under an opening (a column would block the tie), and enough plate is left between any two
+    ties, bare = deck_ties(), deck(ties=False)
+    for i, (x, y, lx, ly, kind) in enumerate(ties):
+        where = f"tie {kind} at {x:.1f}, {y:.1f}"
+        assert vol(parts["body"], box(lx, ly, COL_TOP - Z0, x, y, Z0)) < 0.05, f"{where}: box in the way under it"
+        if kind == "notch":
+            assert vol(bare, tie_cut(x, y, lx, ly)) > 1.0, f"{where} misses the deck"
+        else:
+            assert DECK_FRONT + DECK_LIP_W + TIE_GAP <= x - lx / 2 and x + lx / 2 <= DECK_REAR - DECK_LIP_W - TIE_GAP \
+                and abs(y) + ly / 2 <= YU - DECK_LIP_W - TIE_GAP, f"{where}: not inside the lip"
+            assert vol(bare, box(lx, ly, 20.0, x, y, DECK_Z + 0.01)) < 0.05, f"{where} cuts a wall or bracket"
+        for x2, y2, lx2, ly2, _ in ties[i + 1:]:
+            gap = max(abs(x - x2) - (lx + lx2) / 2, abs(y - y2) - (ly + ly2) / 2)
+            assert gap >= TIE_GAP - 1e-6, f"{where}: only {gap:.1f} mm from the opening at {x2:.1f}, {y2:.1f}"
+        for dname, dmy in dm.items():
+            assert vol(dmy, tie_cut(x, y, lx, ly)) < 0.05, f"{where} is under the {dname}"
     pw = POST_C[1] - POST_Y
     assert pw - INSERT_D / 2 >= 1.6, f"clamp post insert wall {pw - INSERT_D / 2:.1f} mm"
     assert 0.25 <= SQUEEZE <= 0.45 and TONGUE_H > 0
@@ -653,7 +735,7 @@ def check(parts):
 # ----------------------------------------------------------------------------- output
 def build():
     return {"body": body(), "lid": lid(), "deck": deck(), "board clamp": board_clamp(), "shoe": shoe(), "rack plate": rack_plate(),
-            "ribbon clamp": ribbon_clamp(), "rear hood": hood(1), "front hood": hood(-1)}
+            "ribbon clamp": ribbon_clamp(), "imu cover": imu_cover(), "rear hood": hood(1), "front hood": hood(-1)}
 
 
 def print_pose(name, p):
@@ -678,7 +760,7 @@ PLATES = {  # one 3MF per build plate; parts in rows along Y, 10 mm apart
     "box_v2_plate3_deck": ["deck", "board clamp", "ribbon clamp"],
     "box_v2_plate4_rack_plate": ["rack plate"],
     "box_v2_plate5_shoe": ["shoe"],
-    "box_v2_plate6_hoods": ["rear hood", "front hood"],
+    "box_v2_plate6_hoods": ["rear hood", "front hood", "imu cover"],
 }
 
 
@@ -705,7 +787,7 @@ def main():
     parts = build()
     check(parts)
     asm = cq.Assembly(name="box_v2")
-    colors = {"body": "gray", "lid": "lightgray", "deck": "white", "board clamp": "white", "shoe": "gray", "rack plate": "black", "ribbon clamp": "gray",
+    colors = {"body": "gray", "lid": "lightgray", "deck": "white", "board clamp": "white", "shoe": "gray", "rack plate": "black", "ribbon clamp": "gray", "imu cover": "white",
               "rear hood": "lightgray", "front hood": "lightgray"}
     for name, p in parts.items():
         asm.add(p, name=name.replace(" ", "_"), color=cq.Color(colors[name]))
