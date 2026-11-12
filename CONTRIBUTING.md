@@ -89,4 +89,4 @@ Keep a pull request to one change. Say what you changed and how you tried it; ad
 
 ## Releases
 
-Maintainers bump the version in `pyproject.toml` and `package.json` (a test keeps them equal), add the changes to [CHANGELOG.md](CHANGELOG.md) and run the **Publish to PyPI** workflow.
+Maintainers bump the version in `pyproject.toml` and `package.json` (a test keeps them equal), add the changes to [CHANGELOG.md](CHANGELOG.md) run the **Publish to PyPI** workflow, and run `npm publish` for npm.

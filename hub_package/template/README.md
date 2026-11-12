@@ -15,6 +15,8 @@ cd my-first-build
 python3 hardware/knowledge/kb.py serve
 ```
 
+If you have Node.js, `npx hardware-knowledge-hub init my-first-build` creates the same folder without installing anything. The editor itself needs Python 3.10 or newer.
+
 Open [the local editor](http://127.0.0.1:8765). Your new folder starts with Bike Logger, a real Raspberry Pi project with a rear camera, sensors, and a printed enclosure.
 
 1. **Explore the build.** Find where parts sit in **Bike**, trace connections in **Wiring**, and inspect the enclosure in **3D Parts**.

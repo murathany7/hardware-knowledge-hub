@@ -1,6 +1,6 @@
 # Hardware Knowledge Hub
 
-[![Checks](https://github.com/murathany7/hardware-knowledge-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/murathany7/hardware-knowledge-hub/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/hardware-knowledge-hub)](https://pypi.org/project/hardware-knowledge-hub/) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/murathany7/hardware-knowledge-hub/blob/main/LICENSE)
+[![Checks](https://github.com/murathany7/hardware-knowledge-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/murathany7/hardware-knowledge-hub/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/hardware-knowledge-hub)](https://pypi.org/project/hardware-knowledge-hub/) [![npm](https://img.shields.io/npm/v/hardware-knowledge-hub)](https://www.npmjs.com/package/hardware-knowledge-hub) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/murathany7/hardware-knowledge-hub/blob/main/LICENSE)
 
 **Give your AI assistant the whole build, one time.**
 
@@ -16,6 +16,8 @@ hardware-knowledge-hub init my-first-build
 cd my-first-build
 python3 hardware/knowledge/kb.py serve
 ```
+
+If you have Node.js, `npx hardware-knowledge-hub init my-first-build` creates the same folder without installing anything. The editor itself needs Python 3.10 or newer.
 
 Open [the local editor](http://127.0.0.1:8765). Your new folder starts with Bike Logger, a real Raspberry Pi project with a rear camera, sensors, and a printed enclosure.
 

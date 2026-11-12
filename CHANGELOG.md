@@ -7,6 +7,7 @@
 - The Bike Logger example has the taller box v2 (240 x 188 x 131 mm), its IMU cover and the corrected deck.
 - Tests for the notes generator, the editor's server, both installers and the published demo, run on every pull request on Linux and macOS.
 - A contributor guide, a roadmap, and issue and pull request templates.
+- Also on npm: `npx hardware-knowledge-hub init my-first-build`.
 
 ## 0.2.0 (2026-11-09)
 
