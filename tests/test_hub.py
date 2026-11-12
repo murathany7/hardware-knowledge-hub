@@ -240,6 +240,14 @@ class ServerTest(unittest.TestCase):
         self.assertEqual(kb.load(), edited)
         self.assertIn("## Added by a test", kb.OUT.read_text())
 
+    def test_oversized_request_is_refused(self):
+        connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
+        self.addCleanup(connection.close)
+        connection.putrequest("POST", "/api/save")
+        connection.putheader("Content-Length", "6000000")
+        connection.endheaders()
+        self.assertEqual(connection.getresponse().status, 400)
+
     def test_bad_data_is_a_400_not_a_crash(self):
         self.assertEqual(self.request("POST", "/api/save", {"sections": [{"type": "table"}]})[0], 400)
 

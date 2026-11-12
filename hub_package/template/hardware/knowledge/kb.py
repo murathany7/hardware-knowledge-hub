@@ -242,6 +242,15 @@ class Handler(BaseHTTPRequestHandler):
         self.send(f.read_bytes(), ctype + "; charset=utf-8")
 
     def do_POST(self):
+        # Read the body before answering, also when refusing: closing on unread data resets the connection and the
+        # browser never sees the answer.
+        try:
+            size = int(self.headers.get("Content-Length", 0))
+        except ValueError:
+            size = -1
+        if not 0 <= size <= 5_000_000:
+            return self.send(json.dumps({"error": "request too large"}), status=400)
+        body = self.rfile.read(size)
         if READONLY and self.path != "/api/render":  # rendering the preview changes nothing
             return self.send(json.dumps({"error": "This is a read-only copy: edit in the local editor"}), status=403)
         # Reject cross-site posts: only the page we serve may write.
@@ -252,10 +261,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/api/preview/build":
             return self.send(json.dumps(build_preview()))
         try:
-            size = int(self.headers.get("Content-Length", 0))
-            if size > 5_000_000:
-                raise ValueError("request too large")
-            data = json.loads(self.rfile.read(size))
+            data = json.loads(body)
             if self.path in ("/api/open-model", "/api/open-in-studio"):
                 app = "bambu" if self.path == "/api/open-in-studio" else data["app"]
                 return self.send(json.dumps(open_model(data["name"], app)))
