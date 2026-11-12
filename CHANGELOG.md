@@ -1,7 +1,9 @@
 # Changelog
 
-## 0.2.1 (2026-11-12)
+## 0.2.1 (2026-11-13)
 
+- **Download CSV** on every table in Notes, in the local editor and the demo (thanks @KDaSC).
+- The editor reads a request before refusing it, so a refused save shows its message instead of a connection error.
 - The Bike Logger example has the taller box v2 (240 x 188 x 131 mm), its IMU cover and the corrected deck.
 - Tests for the notes generator, the editor's server, both installers and the published demo, run on every pull request on Linux and macOS.
 - A contributor guide, a roadmap, and issue and pull request templates.
