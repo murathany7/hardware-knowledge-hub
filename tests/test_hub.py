@@ -2,8 +2,10 @@
 
     python3 -m unittest discover -s tests -v
 """
+import csv
 import http.client
 import importlib.util
+import io
 import json
 import re
 import shutil
@@ -87,6 +89,47 @@ class RenderTest(unittest.TestCase):
     def test_generated_notes_match_the_data(self):
         """The same check as `kb.py check`: hardware/CLAUDE.md must be regenerated after editing the JSON."""
         self.assertEqual(kb.OUT.read_text(), kb.render(kb.load()))
+
+
+@unittest.skipUnless(shutil.which("node"), "node is not installed")
+class CsvTest(unittest.TestCase):
+    def export(self, section):
+        # Load the real editor script, leaving its asynchronous page setup idle.
+        script = """
+const fs = require('node:fs');
+const vm = require('node:vm');
+const context = vm.createContext({
+  document: {getElementById: () => ({})},
+  window: {addEventListener() {}},
+  fetch: () => new Promise(() => {}),
+});
+vm.runInContext(fs.readFileSync(process.argv[1], 'utf8'), context);
+process.stdout.write(context.tableCsv(JSON.parse(fs.readFileSync(0, 'utf8'))));
+"""
+        result = subprocess.run(
+            ["node", "-e", script, str(PROJECT / "hardware" / "knowledge" / "ui" / "app.js")],
+            input=json.dumps(section).encode(), capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return list(csv.reader(io.StringIO(result.stdout.decode(), newline="")))
+
+    def test_quotes_headers_and_cells(self):
+        expected = [
+            ["Part, name", 'Size "mm"', "Notes"],
+            ['Bolt, M3', '3"', "first\nsecond"],
+            ["Pi", "5", "one\rtwo\r\nthree"],
+            ["传感器", "", "plain"],
+        ]
+        self.assertEqual(self.export({"columns": expected[0], "rows": expected[1:]}), expected)
+
+    def test_keeps_column_count_and_empty_values(self):
+        self.assertEqual(self.export({
+            "columns": ["Part", "Count", "Note"],
+            "rows": [["Bolt", 0, False], ["Nut"], [None, "", "ok", "not a column"]],
+        }), [["Part", "Count", "Note"], ["Bolt", "0", "false"], ["Nut", "", ""], ["", "", "ok"]])
+
+    def test_empty_table_has_headers(self):
+        self.assertEqual(self.export({"columns": ["Part", "Count"], "rows": []}), [["Part", "Count"]])
 
 
 class ParametersTest(unittest.TestCase):
